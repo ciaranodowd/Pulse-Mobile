@@ -34,6 +34,9 @@
       "eas": {
         "projectId": "04135940-74a1-4c21-84a1-cd80abdc3643"
       }
-    }
+    },
+    "plugins": [
+      "@rnmapbox/maps"
+    ]
   }
 }
