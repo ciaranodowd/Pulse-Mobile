@@ -619,6 +619,55 @@ const AccountScreen = ({ session, profile, pulseHistory, onLogout, onSaveProfile
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// AnimatedVenueMarker — bobs + rotates for pub/bar emojis
+// ─────────────────────────────────────────────────────────────────────────────
+const ANIMATED_EMOJIS = new Set(["🍺", "🍸"]);
+
+function AnimatedVenueMarker({ emoji, isSelected }) {
+  const bob    = useRef(new Animated.Value(0)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!ANIMATED_EMOJIS.has(emoji)) return;
+
+    const bobLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(bob,    { toValue: -6, duration: 1200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(bob,    { toValue:  0, duration: 1200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      ])
+    );
+    const rotateLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotate, { toValue:  1, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(rotate, { toValue: -1, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(rotate, { toValue:  0, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      ])
+    );
+
+    bobLoop.start();
+    rotateLoop.start();
+    return () => { bobLoop.stop(); rotateLoop.stop(); };
+  }, [emoji]);
+
+  const rotateStr = rotate.interpolate({ inputRange: [-1, 1], outputRange: ["-12deg", "12deg"] });
+
+  return (
+    <Animated.View style={{
+      backgroundColor: isSelected ? "rgba(0,229,255,0.18)" : "rgba(0,0,0,0.85)",
+      borderWidth: 1,
+      borderColor: isSelected ? "rgba(0,229,255,0.75)" : "rgba(255,255,255,0.22)",
+      paddingHorizontal: 9, paddingVertical: 7, borderRadius: 999,
+      transform: [
+        { translateY: ANIMATED_EMOJIS.has(emoji) ? bob : 0 },
+        { rotate: ANIMATED_EMOJIS.has(emoji) ? rotateStr : "0deg" },
+      ],
+    }}>
+      <Text style={{ color: "white", fontSize: 14 }}>{emoji}</Text>
+    </Animated.View>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MapPane
 // ─────────────────────────────────────────────────────────────────────────────
 function MapPane({ title, subtitle, location, venues, pulses, selectedVenue, setSelectedVenue, showPulseAnim, mapRef, mapRippleKey, rippleLocation }) {
@@ -679,15 +728,9 @@ function MapPane({ title, subtitle, location, venues, pulses, selectedVenue, set
           return (
             <Marker key={v.id} coordinate={{ latitude: lat, longitude: lon }}
               title={v.name} description={String(v.kind || "venue")}
+              tracksViewChanges={ANIMATED_EMOJIS.has(kindEmoji(v.kind))}
               onPress={(e) => { e.stopPropagation?.(); setSelectedVenue(v); }}>
-              <View style={{
-                backgroundColor: isSelected ? "rgba(0,229,255,0.18)" : "rgba(0,0,0,0.85)",
-                borderWidth: 1,
-                borderColor: isSelected ? "rgba(0,229,255,0.75)" : "rgba(255,255,255,0.22)",
-                paddingHorizontal: 9, paddingVertical: 7, borderRadius: 999,
-              }}>
-                <Text style={{ color: "white", fontSize: 14 }}>{kindEmoji(v.kind)}</Text>
-              </View>
+              <AnimatedVenueMarker emoji={kindEmoji(v.kind)} isSelected={isSelected} />
             </Marker>
           );
         })}
