@@ -1342,7 +1342,7 @@ out tags center;
         </Pressable>
         <Pressable style={[styles.navItem, tab === "events"  && styles.navItemActive]} onPress={() => { setSelectedVenue(null); setTab("events"); }}>
           <Text style={[styles.navIcon, tab === "events"  && styles.navIconActive]}>📅</Text>
-          <Text style={[styles.navText, tab === "events"  && styles.navTextActive]}>Planner</Text>
+          <Text style={[styles.navText, tab === "events"  && styles.navTextActive]}>Venue Leaderboard</Text>
         </Pressable>
         <Pressable style={[styles.navItem, tab === "friends" && styles.navItemActive]} onPress={() => { setSelectedVenue(null); setTab("friends"); }}>
           <Text style={[styles.navIcon, tab === "friends" && styles.navIconActive]}>👥</Text>
