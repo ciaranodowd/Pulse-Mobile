@@ -91,11 +91,40 @@ const kindEmoji = (kind) => {
 };
 
 const DARK_MAP_STYLE = [
-  { elementType: "geometry",           stylers: [{ color: "#0f0f10" }] },
-  { elementType: "labels.text.fill",   stylers: [{ color: "#8a8a8a" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#0f0f10" }] },
-  { featureType: "road",  elementType: "geometry", stylers: [{ color: "#151516" }] },
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#060b12" }] },
+  // Base
+  { elementType: "geometry",                                         stylers: [{ color: "#111114" }] },
+  { elementType: "labels.text.fill",                                 stylers: [{ color: "#7a7a7a" }] },
+  { elementType: "labels.text.stroke",                               stylers: [{ color: "#111114" }] },
+  // Roads
+  { featureType: "road",              elementType: "geometry",       stylers: [{ color: "#1e1e22" }] },
+  { featureType: "road",              elementType: "geometry.stroke", stylers: [{ color: "#111114" }] },
+  { featureType: "road",              elementType: "labels.text.fill", stylers: [{ color: "#555560" }] },
+  { featureType: "road.highway",      elementType: "geometry",       stylers: [{ color: "#2a2a30" }] },
+  { featureType: "road.highway",      elementType: "geometry.stroke", stylers: [{ color: "#111114" }] },
+  { featureType: "road.highway",      elementType: "labels.text.fill", stylers: [{ color: "#666670" }] },
+  { featureType: "road.arterial",     elementType: "geometry",       stylers: [{ color: "#1a1a1e" }] },
+  { featureType: "road.local",        elementType: "geometry",       stylers: [{ color: "#181818" }] },
+  // Water
+  { featureType: "water",             elementType: "geometry",       stylers: [{ color: "#0a0e18" }] },
+  { featureType: "water",             elementType: "labels.text.fill", stylers: [{ color: "#2a3a50" }] },
+  // Landscape
+  { featureType: "landscape",         elementType: "geometry",       stylers: [{ color: "#141418" }] },
+  { featureType: "landscape.natural", elementType: "geometry",       stylers: [{ color: "#13131a" }] },
+  { featureType: "landscape.man_made",elementType: "geometry",       stylers: [{ color: "#181820" }] },
+  // Parks & green
+  { featureType: "poi.park",          elementType: "geometry",       stylers: [{ color: "#101418" }] },
+  { featureType: "poi.park",          elementType: "labels.text.fill", stylers: [{ color: "#2a3530" }] },
+  // POIs
+  { featureType: "poi",               elementType: "geometry",       stylers: [{ color: "#161618" }] },
+  { featureType: "poi",               elementType: "labels.text.fill", stylers: [{ color: "#505055" }] },
+  { featureType: "poi",               elementType: "labels.icon",    stylers: [{ visibility: "off" }] },
+  // Transit
+  { featureType: "transit",           elementType: "geometry",       stylers: [{ color: "#1a1a20" }] },
+  { featureType: "transit.station",   elementType: "labels.text.fill", stylers: [{ color: "#505055" }] },
+  // Administrative
+  { featureType: "administrative",    elementType: "geometry",       stylers: [{ color: "#222228" }] },
+  { featureType: "administrative.country", elementType: "labels.text.fill", stylers: [{ color: "#606065" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#888890" }] },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -700,8 +729,8 @@ function MapPane({ title, subtitle, location, venues, pulses, selectedVenue, set
         initialRegion={region}
         showsUserLocation showsMyLocationButton
         onPress={() => setSelectedVenue(null)}
-        mapType={Platform.OS === "ios" ? "mutedStandard" : "standard"}
-        customMapStyle={Platform.OS === "android" ? DARK_MAP_STYLE : undefined}
+        mapType="standard"
+        customMapStyle={DARK_MAP_STYLE}
       >
         {activePulses.map((p) => {
           const lat = Number(p.latitude), lon = Number(p.longitude);
