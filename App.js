@@ -759,6 +759,7 @@ export default function App() {
   const [showPulseRipple, setShowPulseRipple] = useState(false);
   const [mapRippleKey,    setMapRippleKey]    = useState(0);
   const [rippleLocation,  setRippleLocation]  = useState(null);
+  const [pulseScreenPos,  setPulseScreenPos]  = useState(null);
 
   // ── Skia PulseRings ───────────────────────────────────────────────────────
   const pulseRingsRef      = useRef(null);
@@ -1230,6 +1231,18 @@ out tags center;
       if (cooldownLeft > 0) { setStatus(`Wait ${cooldownLeft}s before pulsing again.`); return; }
       const fix = location ?? (await getOneLocationFix());
       setLocation(fix);
+
+      // Resolve user's GPS location to screen pixel position for PulseRings
+      const activeMapRef = [mapRefAll, mapRefAge, mapRefFriends][mapPage] ?? mapRefAll;
+      if (activeMapRef.current && fix?.latitude && fix?.longitude) {
+        try {
+          const pt = await activeMapRef.current.pointForCoordinate({
+            latitude: fix.latitude, longitude: fix.longitude,
+          });
+          setPulseScreenPos({ x: pt.x, y: pt.y });
+        } catch { setPulseScreenPos(null); }
+      }
+
       triggerPulseRipple(fix);
       triggerPulseAnimation();   // ← Skia rings for 5s
       await addPulseToDb({ lat: fix.latitude, lon: fix.longitude, source: "manual", venueId: selectedVenue?.id ?? null });
@@ -1256,7 +1269,7 @@ out tags center;
       <View style={{ flex: 1, paddingBottom: NAV_HEIGHT }}>
 
         {tab === "map" && (
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, overflow: "hidden" }}>
             <PagerView ref={pagerRef} style={{ flex: 1 }} initialPage={0} onPageSelected={(e) => setMapPage(e.nativeEvent.position)}>
               <View key="all">
                 <MapPane title="Everyone" subtitle="All pulses nearby" location={location} venues={venues} pulses={pulsesAll}
@@ -1290,6 +1303,17 @@ out tags center;
               </View>
               <Text style={styles.status}>Pulses: {pulses.length} • Venues: {venues.length}</Text>
             </View>
+
+            {/* Skia ring animation — clipped to map area, originates at user location */}
+            {showPulseRings && (
+              <PulseRings
+                ref={pulseRingsRef}
+                visible={showPulseRings}
+                duration={SKIA_ANIMATION_MS}
+                centerX={pulseScreenPos?.x}
+                centerY={pulseScreenPos?.y}
+              />
+            )}
 
             {selectedVenue && (
               <View style={styles.sheet}>
@@ -1355,28 +1379,11 @@ out tags center;
       </View>
 
       {/*
-        ════════════════════════════════════════════════════════════
-        ROOT-LEVEL OVERLAYS — rendered after nav bar so they paint
-        above the native map layer (zIndex won't work inside MapView)
-        ════════════════════════════════════════════════════════════
+        ROOT-LEVEL OVERLAYS — edge pulse and modals only.
+        PulseRings is now rendered inside the map view (clipped to map area,
+        centred on the user's screen position). PulseRipple removed — the
+        geo-referenced MapRippleCircles inside MapView handles the on-map effect.
       */}
-
-      {/* Existing RN animated ripple */}
-      <PulseRipple
-        visible={showPulseRipple}
-        size={260}
-        duration={1600}
-        onFinish={() => setShowPulseRipple(false)}
-      />
-
-      {/* Skia ring animation — 5 seconds per pulse trigger */}
-      {showPulseRings && (
-        <PulseRings
-          ref={pulseRingsRef}
-          visible={showPulseRings}
-          duration={SKIA_ANIMATION_MS}
-        />
-      )}
 
       {/* Age bracket modal */}
       <Modal visible={showAgeModal} transparent animationType="fade">
