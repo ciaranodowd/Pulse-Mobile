@@ -632,15 +632,15 @@ function AnimatedVenueMarker({ emoji, isSelected }) {
 
     const bobLoop = Animated.loop(
       Animated.sequence([
-        Animated.timing(bob,    { toValue: -6, duration: 1200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(bob,    { toValue:  0, duration: 1200, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(bob,    { toValue: -6, duration: 1200, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
+        Animated.timing(bob,    { toValue:  0, duration: 1200, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
       ])
     );
     const rotateLoop = Animated.loop(
       Animated.sequence([
-        Animated.timing(rotate, { toValue:  1, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(rotate, { toValue: -1, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
-        Animated.timing(rotate, { toValue:  0, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+        Animated.timing(rotate, { toValue:  1, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
+        Animated.timing(rotate, { toValue: -1, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
+        Animated.timing(rotate, { toValue:  0, duration: 1800, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
       ])
     );
 
