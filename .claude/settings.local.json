@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/colin/dev/pulse-mobile/node_modules/@supabase -name \"*.js\" 2>/dev/null | xargs grep -l \"\\\\.body\" 2>/dev/null | head -10)",
+      "Bash(find /c/Users/colin/dev/pulse-mobile/node_modules/@rnmapbox/maps/lib/module -name \"*.js\" 2>/dev/null | head -20)",
+      "Bash(find /c/Users/colin/dev/pulse-mobile/node_modules/@rnmapbox/maps/lib/module -name \"*.js\" 2>/dev/null | xargs grep -l \"body\" 2>/dev/null | head -10)",
+      "Bash(find /c/Users/colin/dev/pulse-mobile/node_modules/@supabase/postgrest-js -name \"*.js\" 2>/dev/null | head -10)",
+      "Bash(find /c/Users/colin/dev/pulse-mobile/node_modules/@supabase -name \"*.js\" -not -path \"*/node_modules/*\" 2>/dev/null | xargs grep -l \"\\\\.body\" 2>/dev/null | head -10)",
+      "Bash(find /c/Users/colin/dev/pulse-mobile/node_modules/@expo/config -name \"*.js\" 2>/dev/null | xargs grep -l \"body\" 2>/dev/null | head -10)",
+      "Bash(grep -rn \"\\\\.body\" /c/Users/colin/dev/pulse-mobile/node_modules/@rnmapbox/maps/ --include=\"*.js\" 2>/dev/null | grep -v \"\\\\.map\\\\.js\\\\|node_modules/@rnmapbox/maps/node_modules\\\\|plugin/\\\\|\\\\.test\\\\.\" | grep \"\\\\.body\" | head -20)",
+      "Bash(grep -rn \"\\\\.body\" /c/Users/colin/dev/pulse-mobile/node_modules/@expo/config/build/ --include=\"*.js\" 2>/dev/null | grep -v \"\\\\.map:\" | head -15)",
+      "Bash(npx expo:*)",
+      "Bash(mv:*)",
+      "Bash(magick:*)",
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(find /c/Users/colin -type f -name *.md -path *Obsidian* -o -type f -name *.md -path *vault*)",
+      "Bash(find /c/Users/colin/OneDrive -type f -name *.md)"
+    ]
+  }
+}
